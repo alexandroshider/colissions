@@ -4,6 +4,17 @@ import random
 if __name__ == "__main__":
     #wallSize is the size of the box
     wallSize=10
+
+
+    
+
+    #Posición inicial
+    R0=[0,0]
+    #grafica del primer punto
+    plt.plot([R0[0]],[R0[1]],"ro-")
+
+
+
     #x and y are the positions in x-axis and y-axis
     #These are the initial positions
     posX=5
@@ -18,6 +29,12 @@ if __name__ == "__main__":
     #The particle gives 100 steps
     for i in range(0,100):
         #Particle moves in x and y
+        #Configuración de los ejes de la caminata
+        a= plt.figure()
+        axes= a.add_axes([0.1,0.1,0.8,0.8])
+        # adding axes
+        axes.set_xlim([-10,10])
+        axes.set_ylim([-10,10])
         posX=posX+velX
         posY=posY+velY
 
@@ -42,3 +59,10 @@ if __name__ == "__main__":
                 posY=wallSize
             velY=-velY
         print(i+1,posX,posY)
+        plt.plot(posX,posY,"bo-")
+        if i<=9:
+            plt.savefig(f'line plot0{i}.jpg', bbox_inches='tight', dpi=150)
+        if i>=10:
+            plt.savefig(f'line plot{i}.jpg', bbox_inches='tight', dpi=150)
+        
+        
