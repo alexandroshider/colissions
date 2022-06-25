@@ -5,16 +5,6 @@ if __name__ == "__main__":
     #wallSize is the size of the box
     wallSize=10
 
-
-    
-
-    #Posición inicial
-    R0=[0,0]
-    #grafica del primer punto
-    plt.plot([R0[0]],[R0[1]],"ro-")
-
-
-
     #x and y are the positions in x-axis and y-axis
     #These are the initial positions
     posX=5
@@ -35,6 +25,7 @@ if __name__ == "__main__":
         # adding axes
         axes.set_xlim([-10,10])
         axes.set_ylim([-10,10])
+        plt.axis('off')
         posX=posX+velX
         posY=posY+velY
 
@@ -58,11 +49,9 @@ if __name__ == "__main__":
                 posX=wallSize/slope-posY/slope+posX
                 posY=wallSize
             velY=-velY
-        print(i+1,posX,posY)
+        #print(i+1,posX,posY)
         plt.plot(posX,posY,"bo-")
         if i<=9:
             plt.savefig(f'line plot0{i}.jpg', bbox_inches='tight', dpi=150)
         if i>=10:
             plt.savefig(f'line plot{i}.jpg', bbox_inches='tight', dpi=150)
-        
-        
