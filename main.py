@@ -2,9 +2,14 @@ from matplotlib import pyplot as plt
 import random
 import particle_object
 
-
-#Function to change the direction of a particle if it 
-#crashes against a right or left wall.
+"""
+Functions to change the direction of a particle if it 
+crashes against a right or left wall and upper or lower wall. 
+Args are:
+-size of the box/2
+-positions in x and y axes
+-velocities in x and y axes
+"""
 def bounce_lateral_wall(wallSize,pos_x,pos_y,vel_x,vel_y):    
     if pos_x>wallSize or pos_x<-wallSize:
         slope=(pos_y-(pos_y-vel_y))/(pos_x-(pos_x-vel_x))            
@@ -18,8 +23,6 @@ def bounce_lateral_wall(wallSize,pos_x,pos_y,vel_x,vel_y):
     return vel_x
 
 
-#Function to change the direction of a particle if it 
-#crashes against a superior or inferior wall.
 def bounce_level_wall(wallSize,pos_x,pos_y,vel_x,vel_y):
     if pos_y>wallSize or pos_y<-wallSize:
         slope=(pos_y-(pos_y-vel_y))/(pos_x-(pos_x-vel_x))
@@ -34,61 +37,61 @@ def bounce_level_wall(wallSize,pos_x,pos_y,vel_x,vel_y):
 
 
 if __name__ == "__main__":
+    #This is the number of particles in square box
+    number_of_particles=int(20)
+    #This is the number of steps each particle will cover
+    steps=200
+    #Dimension is 
+    box_lenght_side=10
+    #Speed is for speed up the particles
+    speed=1
     #wallSize is the size of the box where particles bounce
-    wallSize=10
+    wallSize=box_lenght_side/2
 
-    #particle 1 is a object, it will be the blue point 
-    particula1=particle_object.Particle()
-    #Initial posicion of blue 
-    particula1.posicion(5,3)
-    #Initial velocity of blue
-    particula1.velocity(random.random(),random.random())
-    
-    #particle 1 is a object, it will be the red point
-    particula2=particle_object.Particle()
-    #Initial posicion of red
-    particula2.posicion(-2,7)
-    #Initial velocity of red
-    particula2.velocity(random.random(),random.random())
-    
+    """
+    In this loop I create the instances (particles) and save
+    them in a list.
+    Also, we call position and velocity methods in this loop
+    so each instance have initial position and initial velocity.
+    """
+    particulas=[]
+    for i in range(0,number_of_particles):
+        #particulas_object=particle_object.Particle()
+        particulas.append(particle_object.Particle())
+        #particle's atributes are defined
+        particulas[i].posicion(random.randint(-int(wallSize)+1,
+            int(wallSize)-1),random.randint(-int(wallSize)+1,int(wallSize)-1))
+        #Initial velocity of blue
+        particulas[i].velocity(random.uniform(-int(wallSize)/10*speed,
+            int(wallSize)/10*speed),random.uniform(-int(wallSize)/10*speed, 
+            int(wallSize)/10*speed))
     #This is is how many steps the particles go through
-    for i in range(0,150):
+    for j in range(0,int(steps)):
         #Plot settings
         a= plt.figure()
         axes= a.add_axes([0.1,0.1,0.8,0.8])
-        #Size of the graph
-        axes.set_xlim([-10,10])
-        axes.set_ylim([-10,10])
+        #Size of the square
+        axes.set_xlim([-wallSize,wallSize])
+        axes.set_ylim([-wallSize,wallSize])
         plt.axis('off')
-
+        for i in range(0,number_of_particles):
+            #Conditional for checking if particle bounces with a barrier
+            #Then this functions return the velocity of the i-th particle. 
+            particulas[i].vel_xaxis=bounce_lateral_wall(wallSize,particulas[i].pos_xaxis,
+                particulas[i].pos_yaxis,particulas[i].vel_xaxis,particulas[i].vel_yaxis)
+            particulas[i].vel_yaxis=bounce_level_wall(wallSize,particulas[i].pos_xaxis,
+                particulas[i].pos_yaxis,particulas[i].vel_xaxis,particulas[i].vel_yaxis)
+            #Movement of first particle. This is like
+            #Final position = initial position + step in each axis
+            particulas[i].pos_xaxis=particulas[i].pos_xaxis+particulas[i].vel_xaxis
+            particulas[i].pos_yaxis=particulas[i].pos_yaxis+particulas[i].vel_yaxis
+            #Draw the i-th point on the plot 
+            plt.plot(particulas[i].pos_xaxis,particulas[i].pos_yaxis,"bo-")
         
-        #Conditional for checking if particle bounces with a barrier
-        particula1.vel_xaxis=bounce_lateral_wall(wallSize,particula1.pos_xaxis,
-            particula1.pos_yaxis,particula1.vel_xaxis,particula1.vel_yaxis)
-        particula1.vel_yaxis=bounce_level_wall(wallSize,particula1.pos_xaxis,
-            particula1.pos_yaxis,particula1.vel_xaxis,particula1.vel_yaxis)
-        #Movement of first particle.
-        particula1.pos_xaxis=particula1.pos_xaxis+particula1.vel_xaxis
-        particula1.pos_yaxis=particula1.pos_yaxis+particula1.vel_yaxis
-
-        
-        #Conditional for checking if particle bounces with a barrier 
-        particula2.vel_xaxis=bounce_lateral_wall(wallSize,particula2.pos_xaxis,
-            particula2.pos_yaxis,particula2.vel_xaxis,particula2.vel_yaxis)
-        particula2.vel_yaxis=bounce_level_wall(wallSize,particula2.pos_xaxis,
-            particula2.pos_yaxis,particula2.vel_xaxis,particula2.vel_yaxis)
-        #Movement of second particle.
-        particula2.pos_xaxis=particula2.pos_xaxis+particula2.vel_xaxis
-        particula2.pos_yaxis=particula2.pos_yaxis+particula2.vel_yaxis
-
-        #Put two points in the plot 
-        plt.plot(particula1.pos_xaxis,particula1.pos_yaxis,"bo-")
-        plt.plot(particula2.pos_xaxis,particula2.pos_yaxis,"ro-")
-
         #Save the plots as pictures and put a good name so gif is correctly done
-        if i<=9:
-            plt.savefig(f'line plot00{i}.jpg', bbox_inches='tight', dpi=150)
-        if i>=10 and i<=99:
-            plt.savefig(f'line plot0{i}.jpg', bbox_inches='tight', dpi=150)
-        if i>=100:
-            plt.savefig(f'line plot{i}.jpg', bbox_inches='tight', dpi=150)
+        if j<=9:
+            plt.savefig(f'line plot00{j}.jpg', bbox_inches='tight', dpi=150)
+        if j>=10 and j<=99:
+            plt.savefig(f'line plot0{j}.jpg', bbox_inches='tight', dpi=150)
+        if j>=100:
+            plt.savefig(f'line plot{j}.jpg', bbox_inches='tight', dpi=150)
