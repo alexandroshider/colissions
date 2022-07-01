@@ -21,3 +21,7 @@ You need to execute the scripts in the next order:
 
 The final product is a gif called my_awsome.gif
 
+###Not solved, yet
+*Particles dispappear for a moment and go out of the box. 
+ This happens because bounce functions do not return 
+ position on the wall, only velocity as particle bonce.
